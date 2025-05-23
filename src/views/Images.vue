@@ -60,7 +60,6 @@ export default {
             },
           },
         );
-        debugger
         this.images.push(...response.data.data.items.map(this.parseImage));
         this.cursor = response.data.result.data.json.nextCursor.split('|')[0];
       } catch (error) {
