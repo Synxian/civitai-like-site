@@ -19,7 +19,7 @@
 import axios from 'axios';
 import ImageDisplay from '../components/ImageDisplay.vue';
 import Spinner from '../components/spinner.vue';
-import { INFINITE_IMAGE_URL, IMAGE_URL, PROXY_URL } from '../utils/constants';
+import { INFINITE_IMAGE_URL, IMAGE_URL, API_URL } from '../utils/constants';
 
 export default {
   name: 'Images',
@@ -37,19 +37,7 @@ export default {
   },
   computed: {
     requestInput() {
-      const baseParams = `{
-      "json":{
-        "period": "Week",
-        "sort":"Most Reactions",
-        "types":["image"],
-        "useIndex":true,
-        "browsingLevel":1,
-        "include":["cosmetics"],
-        "excludedTagIds":[],
-        "disablePoi":false,
-        "disableMinor":false,
-        "cursor":${this.cursor}
-      }`
+      const baseParams = `{"json":{"period": "Week","sort":"Most Reactions","types":["image"],"useIndex":true,"browsingLevel":1,"include":["cosmetics"],"excludedTagIds":[],"disablePoi":false,"disableMinor":false,"cursor":${this.cursor}}`
       return this.cursor === 'null' ? `${baseParams},"meta":{"values":{"cursor":["undefined"]}}}` : `${baseParams}}`
     },
     allImagesRequest() {
@@ -65,9 +53,15 @@ export default {
     async fetchImages() {
       try {
         const response = await axios.get(
-          `${PROXY_URL}${this.allImagesRequest}`,
+          `${API_URL}/proxy`,
+          {
+            params: {
+              url: this.allImagesRequest,
+            },
+          },
         );
-        this.images.push(...response.data.result.data.json.items.map(this.parseImage));
+        debugger
+        this.images.push(...response.data.data.items.map(this.parseImage));
         this.cursor = response.data.result.data.json.nextCursor.split('|')[0];
       } catch (error) {
         console.error('Error fetching images:', error);

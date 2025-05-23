@@ -14,7 +14,7 @@
 <script>
 import Spinner from './spinner.vue';
 import ReactionBar from './reactionBar.vue';
-import { PROXY_URL } from '../utils/constants';
+import { API_URL } from '../utils/constants';
 const IMAGE_PARAMS = 'anim=false,width=450/'
 
 export default {
@@ -50,7 +50,7 @@ export default {
     async getImage() {
       try {
         this.loading++;
-        const response = await fetch(`${PROXY_URL}${this.imageUrl}${IMAGE_PARAMS}${this.imageId}`);
+        const response = await fetch(`${this.imageUrl}${IMAGE_PARAMS}${this.imageId}`);
         const blob = await response.blob();
         this.image = URL.createObjectURL(blob);
       } catch (error) {
